@@ -31,11 +31,6 @@ ActiveRecord::Schema.define do
     t.references :restaurant
   end
 
-  create_table :location_categories do |t|
-    t.references :category
-    t.references :location
-  end
-
   create_table :menus do |t|
     t.string :name, null: false
     t.references :location
@@ -43,8 +38,12 @@ ActiveRecord::Schema.define do
 
   create_table :dishes do |t|
     t.string :name, null: false
-    t.references :menu
     t.references :category
+  end
+
+  create_table :menu_dishes do |t|
+    t.references :menu
+    t.references :dish
   end
 end
 
@@ -52,11 +51,17 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 end
 
+class Team < ApplicationRecord
+  has_many :restaurants
+end
+
 class Restaurant < ApplicationRecord
   belongs_to :team, optional: true
 
   has_many :locations
   has_many :categories
+
+  has_many :dishes, through: :categories
 end
 
 # Para restaurantes con varias sedes.
@@ -65,9 +70,6 @@ class Location < ApplicationRecord
 
   has_many :menus
   has_many :dishes, through: :menus
-
-  has_many :location_categories
-  has_many :categories, through: :location_categories
 end
 
 class Category < ApplicationRecord
@@ -76,20 +78,20 @@ class Category < ApplicationRecord
   has_many :dishes
 end
 
-class LocationCategory < ApplicationRecord
-  belongs_to :location
-  belongs_to :category
-end
-
 class Menu < ApplicationRecord
   belongs_to :location
 
-  has_many :dishes
+  has_many :menu_dishes
+  has_many :dishes, through: :menu_dishes
 end
 
 class Dish < ApplicationRecord
-  belongs_to :menu
   belongs_to :category
+end
+
+class MenuDish < ApplicationRecord
+  belongs_to :menu
+  belongs_to :dish
 end
 
 gordales = Restaurant.create(name: 'Gordales')
@@ -103,13 +105,14 @@ gordales.categories.create(
     { name: 'Hamburguesales', restaurant: gordales }
   ]
 )
-san_jose.category_ids = gordales.categories.first.id
 
-perrales = san_jose.categories.first
+perrales = gordales.categories.first
 menu = san_jose.menus.create(name: 'Menú San José')
 
 5.times do |i|
-  Dish.create(name: "Platosky #{i}", menu: menu, category: perrales)
+  Dish.create(name: "Platosky #{i}", category: perrales)
 end
+
+menu.dish_ids = gordales.dishes.ids
 
 binding.irb

@@ -4,6 +4,13 @@ Basandome en [Riffing on Rails](https://github.com/kaspth/riffing-on-rails/tree/
 
 ## ¿Cómo ejecutar un riff?
 
+Así:
+
+```bash
+bundle exec ruby prueba.rb
+```
+
 ## Riffs
 
-Primer Riff será Súper Menú.
+1. Súper Menú
+1. Súper Agenda

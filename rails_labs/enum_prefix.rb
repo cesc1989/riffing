@@ -1,5 +1,3 @@
-# Menús de restaurantes para cargar desde celulares.
-#
 #  Ejecuta así:
 #
 #    bundle exec ruby enum_prefix.rb

@@ -1,0 +1,1 @@
+!!Float("hola") rescue false

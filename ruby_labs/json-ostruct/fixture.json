@@ -1,0 +1,13 @@
+{
+  "result_set": {
+    "rows": [
+      {
+        "data": [
+          {
+            "var_char_value": "header"
+          }
+        ]
+      }
+    ]
+  }
+}
